@@ -1,7 +1,3 @@
-/* ============================================================
-   FINAL JS – Full Corrected Version (Auto Next Round Included)
-   ============================================================ */
-
 /* ---------- DOM ---------- */
 const landing = document.getElementById('landing');
 const startBtn = document.getElementById('startBtn');
