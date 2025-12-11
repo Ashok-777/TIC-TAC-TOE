@@ -1,3 +1,5 @@
+/* © Ashok-777 */
+/* GitHub: https://github.com/Ashok-777 */
 /* ---------- DOM ---------- */
 const landing = document.getElementById('landing');
 const startBtn = document.getElementById('startBtn');
@@ -564,3 +566,5 @@ document.addEventListener("keydown", e=>{
   updateRoundInfo();
   updateScores();
 })();
+/* © Ashok-777 */
+/* GitHub: https://github.com/Ashok-777 */
