@@ -1,11 +1,10 @@
 # TIC-TAC-TOE 🎮
 
-A modern, interactive **Tic-Tac-Toe** game built with HTML, CSS, and JavaScript.  
-Supports **1-player (vs CPU)** and **2-player modes**, with customizable winning points, sound effects, confetti celebration for winners, and responsive design.
+A modern, interactive **Tic-Tac-Toe** game built with HTML, CSS, and JavaScript. Supports **1-player (vs CPU)** and **2-player modes**, with customizable winning points, sound effects, confetti celebration for winners, and responsive design.
 
 ---
 
-## 🔹 Key Features
+##  Key Features
 
 - ✔️ **1-Player (vs CPU) & 2-Player modes**  
 - 🎯 **Customizable winning points** (1–10)  
@@ -15,6 +14,15 @@ Supports **1-player (vs CPU)** and **2-player modes**, with customizable winning
 - 🔄 **Automatic next round** after a win or tie  
 - ⏹️ **Round reset, match restart, and exit to menu** functionality  
 - 🏆 **Scoreboard** tracking X, O, and ties  
+
+---
+
+## 🛠️ Technology Stack
+
+- HTML5  
+- CSS3 (Flexbox, Grid, responsive design)  
+- JavaScript (ES6+)  
+- Canvas API for confetti animation  
 
 ---
 
@@ -28,6 +36,13 @@ Supports **1-player (vs CPU)** and **2-player modes**, with customizable winning
 6. The game automatically detects wins, ties, and rounds.  
 7. After reaching the winning points, the match winner is announced with a confetti animation.  
 8. Use **Reset**, **Back**, or **Exit** buttons to control rounds or return to menu.  
+
+
+---
+
+## License
+
+This project is licensed under the **MIT License**. See the License file for details.
 
 ---
 
@@ -46,7 +61,7 @@ Supports **1-player (vs CPU)** and **2-player modes**, with customizable winning
 ```bash
 git clone https://github.com/Ashok-777/TIC-TAC-TOE.git
 cd TIC-TAC-TOE
-
+```
 ## 2. Open the Project
 
 1. Locate the `index.html` file in the project folder.  
@@ -64,6 +79,7 @@ npm install -g live-server
 
 # Start the server in the project folder
 live-server
+```
 ## 4. How to Play
 
 1. Click **START** on the landing page.  
@@ -72,23 +88,10 @@ live-server
 4. Click **START GAME** to play.  
 5. Players take turns selecting empty cells on the 3×3 board.  
 6. Scores update automatically, rounds progress, and winners are celebrated with confetti.  
-7. Use **Reset Round**, **Back to Menu**, or **Exit** as needed.
+7. Use **Reset Round**, **Back to Menu**, or **Exit** as needed.  
 
 ---
 
-## 🛠️ Technology Stack
-
-- HTML5  
-- CSS3 (Flexbox, Grid, responsive design)  
-- JavaScript (ES6+)  
-- Canvas API for confetti animation  
+<p align="center">© Ashok-777 | Crafted with ❤️ and curiosity</p>
 
 ---
-
-## License
-
-This project is licensed under the **MIT License**. See the License file for details.
-
----
-
-<p align="center">© Ashok-777 | Crafted with ❤️ and passion for games</p>
