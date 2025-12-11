@@ -67,7 +67,7 @@ cd TIC-TAC-TOE
 1. Locate the `index.html` file in the project folder.  
 2. Double-click `index.html` **or** right-click → **Open with** → your browser (Chrome, Firefox, Edge, etc.).  
 
-> ✅ The game will load. Click **START**, choose your mode, and begin playing Tic-Tac-Toe.
+>  The game will load. Click **START**, choose your mode, and begin playing Tic-Tac-Toe.
 
 ---
 
