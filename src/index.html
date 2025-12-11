@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Tic-Tac-Toe — Final</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- Landing -->
+  <section id="landing" class="center">
+    <div class="title">TIC • TAC • TOE</div>
+    <div class="pixel-row">
+      <div class="pixel x">X</div>
+      <div class="pixel o">O</div>
+    </div>
+    <div id="pressStart">PRESS START</div>
+    <button id="startBtn" class="btn" style="margin-top:10px">START</button>
+  </section>
+
+  <!-- Mode + slider (Option C) -->
+  <section id="modeScreen" class="center" style="display:none;margin-top:8px">
+    <div style="display:flex;gap:10px;margin-bottom:8px;">
+      <div class="pixel x" style="width:64px;height:64px;font-size:32px">X</div>
+      <div class="pixel o" style="width:64px;height:64px;font-size:32px">O</div>
+    </div>
+    <div style="font-weight:800;margin-bottom:6px">MODE</div>
+    <div class="mode-row" style="margin-bottom:10px">
+      <div style="opacity:.9">1 PLAYER</div>
+      <label class="switch"><input id="modeSwitch" type="checkbox"><span class="slider"></span></label>
+      <div style="opacity:.9">2 PLAYER</div>
+    </div>
+
+    <div class="setup-row">
+      <div class="slider-wrap">
+        <div style="font-weight:800;margin-bottom:6px">Winning Points: <span id="winVal">3</span></div>
+        <input id="winSlider" type="range" min="1" max="10" value="3">
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:8px">
+        <button id="startGame" class="btn">START GAME</button>
+        <button id="backToLanding" class="btn" style="background:#304047;color:#fff">BACK</button>
+        <button id="volumeBtn" class="volume" title="Toggle sound">🔊</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Game -->
+  <section id="gameScreen" style="display:none;margin-top:10px">
+    <div class="top-bar" style="display:flex;align-items:center;justify-content:space-between">
+      <button id="backBtn" class="icon">⟵</button>
+      <div id="turnBox" class="turn">X TURN</div>
+      <div style="display:flex;align-items:center">
+        <button id="exitBtn" class="icon exit" title="Exit">✖</button>
+        <button id="resetBtn" class="icon" title="Reset round" style="margin-left:8px">⟳</button>
+      </div>
+    </div>
+
+    <!-- Round & Goal (STYLE C - large title above board) -->
+    <div id="roundInfo" class="round-info">ROUND 1 &nbsp;&nbsp;|&nbsp;&nbsp; GOAL: 3</div>
+
+    <div class="board" id="board">
+      <div id="strikeLeft" class="strike-left hidden"></div>
+      <div id="strikeRight" class="strike-right hidden"></div>
+      <div class="cell" data-i="0"></div>
+      <div class="cell" data-i="1"></div>
+      <div class="cell" data-i="2"></div>
+      <div class="cell" data-i="3"></div>
+      <div class="cell" data-i="4"></div>
+      <div class="cell" data-i="5"></div>
+      <div class="cell" data-i="6"></div>
+      <div class="cell" data-i="7"></div>
+      <div class="cell" data-i="8"></div>
+    </div>
+
+    <!-- Score format changed to "X : current / goal" -->
+    <div class="score-row">
+      <div class="score xscore"><div id="xLabel">X</div><div id="xScore">0 / 3</div></div>
+      <div class="score tie"><div>TIES</div><div id="tieScore">0</div></div>
+      <div class="score oscore"><div id="oLabel">O</div><div id="oScore">0 / 3</div></div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Confirm modal (reused for Back/Exit/Restart) -->
+<div id="confirmModal" class="overlay" style="display:none;align-items:center;justify-content:center">
+  <div class="modal">
+    <div id="confirmText" style="font-weight:800;margin-bottom:8px"></div>
+    <div>
+      <button id="confirmYes" class="btn">YES</button>
+      <button id="confirmNo" class="btn" style="background:#304047;color:#fff">NO</button>
+    </div>
+  </div>
+</div>
+
+<!-- Winner overlay + confetti canvas -->
+<div id="winnerOverlay" class="winner" style="display:none;align-items:center;justify-content:center">
+  <div class="win-card">
+    <h2 id="winnerTitle">CONGRATULATIONS!</h2>
+    <div id="winnerText" style="font-weight:700;margin-bottom:8px"></div>
+    <div class="win-actions">
+      <button id="playAgain" class="btn">PLAY AGAIN</button>
+      <button id="backMenu" class="btn" style="background:#304047;color:#fff">BACK TO MENU</button>
+    </div>
+  </div>
+</div>
+<canvas id="confettiCanvas" class="confetti" style="display:none"></canvas>
+
+<script src="game.js"></script>
+</body>
+      </html>
