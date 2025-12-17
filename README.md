@@ -92,6 +92,14 @@ live-server
 
 ---
 
+## Deployment
+
+This project is deployed using **Vercel**.  
+
+🔗 **Live Demo:** [TIC-TAC-TOE](https://tic-tac-toe-pi-opal.vercel.app/)
+
+---
+
 <p align="center">© Ashok-777 | Crafted with ❤️ and curiosity</p>
 
 ---
