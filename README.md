@@ -1,6 +1,7 @@
 # TIC-TAC-TOE 🎮
 
 A modern, interactive **Tic-Tac-Toe** game built with HTML, CSS, and JavaScript. Supports **1-player (vs CPU)** and **2-player modes**, with customizable winning points, sound effects, confetti celebration for winners, and responsive design.
+
 ----
 
 ##  Key Features
