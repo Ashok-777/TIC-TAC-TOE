@@ -4,6 +4,10 @@ A modern, interactive **Tic-Tac-Toe** game built with HTML, CSS, and JavaScript.
 
 ----
 
+<img width="1280" height="640" alt="Image" src="https://github.com/user-attachments/assets/cf1d0b54-4f8c-46ce-ba97-746f1b474e3d" />
+
+---
+
 ##  Key Features
 
 - ✔️ **1-Player (vs CPU) & 2-Player modes**  
