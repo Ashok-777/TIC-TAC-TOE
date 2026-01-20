@@ -1,10 +1,9 @@
-// your code goes here
 /* © Ashok-777 */
 /* GitHub: https://github.com/Ashok-777 */
+
 /* ---------- DOM ---------- */
 const landing = document.getElementById('landing');
 const startBtn = document.getElementById('startBtn');
-
 const modeScreen = document.getElementById('modeScreen');
 const modeSwitch = document.getElementById('modeSwitch');
 const startGameBtn = document.getElementById('startGame');
@@ -12,37 +11,30 @@ const backToLanding = document.getElementById('backToLanding');
 const winSlider = document.getElementById('winSlider');
 const winVal = document.getElementById('winVal');
 const volumeBtn = document.getElementById('volumeBtn');
-
 const gameScreen = document.getElementById('gameScreen');
 const boardEl = document.getElementById('board');
 const cellEls = Array.from(document.querySelectorAll('.cell'));
 const strikeLeft = document.getElementById('strikeLeft');
 const strikeRight = document.getElementById('strikeRight');
-
 const turnBox = document.getElementById('turnBox');
 const backBtn = document.getElementById('backBtn');
 const exitBtn = document.getElementById('exitBtn');
 const resetBtn = document.getElementById('resetBtn');
-
 const xLabel = document.getElementById('xLabel');
 const oLabel = document.getElementById('oLabel');
 const xScoreEl = document.getElementById('xScore');
 const oScoreEl = document.getElementById('oScore');
 const tieScoreEl = document.getElementById('tieScore');
-
 const roundInfoEl = document.getElementById('roundInfo');
-
 const confirmModal = document.getElementById('confirmModal');
 const confirmText = document.getElementById('confirmText');
 const confirmYes = document.getElementById('confirmYes');
 const confirmNo = document.getElementById('confirmNo');
-
 const winnerOverlay = document.getElementById('winnerOverlay');
 const winnerTitle = document.getElementById('winnerTitle');
 const winnerText = document.getElementById('winnerText');
 const playAgain = document.getElementById('playAgain');
 const backMenu = document.getElementById('backMenu');
-
 const confettiCanvas = document.getElementById('confettiCanvas');
 let confettiCtx = confettiCanvas.getContext('2d');
 
@@ -50,7 +42,7 @@ let confettiCtx = confettiCanvas.getContext('2d');
 let twoPlayer = false;
 let board = Array(9).fill(null);
 let current = 'X';
-let roundStarter = 'X'; // Tracks who is supposed to start the current round
+let roundStarter = 'X'; // CORE LOGIC: Alternates X and O
 let gameOver = false;
 let scores = { X: 0, O: 0, T: 0 };
 let WIN_GOAL = parseInt(winSlider.value, 10) || 3;
@@ -82,15 +74,12 @@ function clickSound(){
   ensureAudio();
   const o = audioCtx.createOscillator();
   const g = audioCtx.createGain();
-  o.type = "sine";
-  o.frequency.value = 720;
+  o.type = "sine"; o.frequency.value = 720;
   g.gain.setValueAtTime(0.001, audioCtx.currentTime);
   g.gain.exponentialRampToValueAtTime(0.05, audioCtx.currentTime + 0.01);
   g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.12);
-  o.connect(g);
-  g.connect(masterGain);
-  o.start();
-  o.stop(audioCtx.currentTime + 0.13);
+  o.connect(g); g.connect(masterGain);
+  o.start(); o.stop(audioCtx.currentTime + 0.13);
 }
 
 function winSound(){
@@ -98,15 +87,12 @@ function winSound(){
   ensureAudio();
   const o = audioCtx.createOscillator();
   const g = audioCtx.createGain();
-  o.type = "triangle";
-  o.frequency.value = 440;
+  o.type = "triangle"; o.frequency.value = 440;
   g.gain.setValueAtTime(0.001, audioCtx.currentTime);
   g.gain.exponentialRampToValueAtTime(0.12, audioCtx.currentTime + 0.02);
   g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.6);
-  o.connect(g);
-  g.connect(masterGain);
-  o.start();
-  o.stop(audioCtx.currentTime + 0.6);
+  o.connect(g); g.connect(masterGain);
+  o.start(); o.stop(audioCtx.currentTime + 0.6);
 }
 
 function matchWinSound(){
@@ -116,15 +102,12 @@ function matchWinSound(){
   tones.forEach((freq,i)=>{
     const o = audioCtx.createOscillator();
     const g = audioCtx.createGain();
-    o.type = "sine";
-    o.frequency.value = freq;
+    o.type = "sine"; o.frequency.value = freq;
     g.gain.setValueAtTime(0.0001, audioCtx.currentTime + i*0.03);
     g.gain.exponentialRampToValueAtTime(0.14, audioCtx.currentTime + 0.05 + i*0.03);
     g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.6 + i*0.03);
-    o.connect(g);
-    g.connect(masterGain);
-    o.start(audioCtx.currentTime + i*0.03);
-    o.stop(audioCtx.currentTime + 0.6 + i*0.03);
+    o.connect(g); g.connect(masterGain);
+    o.start(audioCtx.currentTime + i*0.03); o.stop(audioCtx.currentTime + 0.6 + i*0.03);
   });
 }
 
@@ -133,7 +116,7 @@ volumeBtn.addEventListener("click", () => {
   volumeBtn.textContent = soundOn ? "🔊" : "🔇";
 });
 
-/* ---------- Labels ---------- */
+/* ---------- Labels & UI ---------- */
 function refreshLabels(){
   if(modeSwitch.checked){
     xLabel.textContent = "X (PLAYER 1)";
@@ -154,7 +137,6 @@ function updateScores(){
   tieScoreEl.textContent = scores.T;
 }
 
-/* ---------- Confirm Modal ---------- */
 function showConfirm(msg, cb){
   confirmText.textContent = msg;
   confirmModal.style.display = "flex";
@@ -162,7 +144,7 @@ function showConfirm(msg, cb){
   confirmNo.onclick = ()=>{ confirmModal.style.display="none"; cb(false); };
 }
 
-/* ---------- Landing ---------- */
+/* ---------- Navigation ---------- */
 startBtn.addEventListener("click", () => {
   landing.style.display = "none";
   modeScreen.style.display = "flex";
@@ -180,17 +162,14 @@ winSlider.addEventListener("input", e => {
   updateRoundInfo();
 });
 
-/* ---------- Start Game ---------- */
 startGameBtn.addEventListener("click", () => {
   twoPlayer = modeSwitch.checked;
   modeScreen.style.display = "none";
   gameScreen.style.display = "block";
-
   refreshLabels();
   resetMatch();
   roundNumber = 1;
-  roundStarter = "X"; // Ensure Match always starts with X
-
+  roundStarter = "X"; 
   updateRoundInfo();
   buildBoard();
 });
@@ -198,7 +177,7 @@ startGameBtn.addEventListener("click", () => {
 /* ---------- Build Board ---------- */
 function buildBoard(){
   board = Array(9).fill(null);
-  current = roundStarter; // Apply the alternating starter logic
+  current = roundStarter; // Set current player to whoever is supposed to start
   gameOver = false;
   hideStrike();
 
@@ -210,29 +189,21 @@ function buildBoard(){
 
   updateTurn();
 
-  // If Round Starter is O and playing against CPU, trigger move
+  // If CPU needs to start the round
   if(!twoPlayer && current === "O") {
-    setTimeout(() => {
-        if(!gameOver) cpuPlay();
-    }, 600);
+    setTimeout(() => { if(!gameOver) cpuPlay(); }, 600);
   }
 }
 
-/* ---------- Cell Click ---------- */
 function onCellClick(i){
   if(gameOver || board[i]) return;
-
-  // In CPU mode, don't allow clicking during CPU turn
   if(!twoPlayer && current !== "X") return;
 
   clickSound();
   makeMove(i, current);
 
-  // Trigger CPU if applicable
   if(!twoPlayer && !gameOver && current === "O"){
-    setTimeout(()=>{
-      if(!gameOver) cpuPlay();
-    }, 400);
+    setTimeout(()=>{ if(!gameOver) cpuPlay(); }, 400);
   }
 }
 
@@ -243,7 +214,7 @@ function cpuPlay() {
   makeMove(mv, "O");
 }
 
-/* ---------- MAIN GAME LOGIC ---------- */
+/* ---------- Game Logic ---------- */
 function makeMove(i, player){
   if(board[i]) return;
 
@@ -254,18 +225,15 @@ function makeMove(i, player){
 
   const res = checkBoard(board);
 
-  /* ---- WIN ---- */
   if(res.win){
     gameOver = true;
     animateSplitStrike(res.line).then(()=>{
       res.line.forEach(idx=> cellEls[idx].classList.add("win"));
       winSound();
     });
-
     scores[res.player]++;
     updateScores();
     disableAll();
-
     if(scores.X >= WIN_GOAL || scores.O >= WIN_GOAL){
       const w = scores.X >= WIN_GOAL ? "X" : "O";
       setTimeout(()=> showMatchWinner(w), 520);
@@ -276,7 +244,6 @@ function makeMove(i, player){
     return;
   }
 
-  /* ---- TIE ---- */
   if(res.tie){
     gameOver = true;
     scores.T++;
@@ -286,16 +253,13 @@ function makeMove(i, player){
     return;
   }
 
-  /* ---- CONTINUE ---- */
   current = player === "X" ? "O" : "X";
   updateTurn();
 }
 
-/* ---------- Auto Next Round Function ---------- */
 function startNextRound(){
   roundNumber++;
-  // Toggle the starter for the next round: X -> O or O -> X
-  roundStarter = (roundStarter === "X") ? "O" : "X";
+  roundStarter = (roundStarter === "X") ? "O" : "X"; // FLIP STARTER
   updateRoundInfo();
   buildBoard();
 }
@@ -310,11 +274,8 @@ function updateTurn(){
 resetBtn.addEventListener("click", () => {
   showConfirm("Restart this round?", ok=>{
     if(!ok) return;
-    if(gameOver) {
-        startNextRound();
-    } else {
-        buildBoard(); // Restart round with same starter
-    }
+    if(gameOver) startNextRound();
+    else buildBoard();
   });
 });
 
@@ -335,7 +296,6 @@ exitBtn.addEventListener("click", () =>{
   });
 });
 
-/* ---------- Match Winner Overlay ---------- */
 function showMatchWinner(player){
   winnerOverlay.style.display = "flex";
   const label = (player === "X") ? xLabel.textContent : oLabel.textContent;
@@ -363,14 +323,12 @@ backMenu.addEventListener("click", ()=>{
   resetMatch();
 });
 
-/* ---------- Reset Match ---------- */
 function resetMatch(){
   scores = {X:0,O:0,T:0};
-  roundStarter = "X"; // Match reset starts back at X
+  roundStarter = "X";
   updateScores();
 }
 
-/* ---------- Board Check ---------- */
 function checkBoard(bd){
   for(const l of WIN_LINES){
     const [a,b,c] = l;
@@ -382,10 +340,8 @@ function checkBoard(bd){
   return {win:false};
 }
 
-/* ---------- Strike Animation ---------- */
 function hideStrike(){
-  strikeLeft.classList.add("hidden");
-  strikeRight.classList.add("hidden");
+  strikeLeft.classList.add("hidden"); strikeRight.classList.add("hidden");
   strikeLeft.style.transform = "translate(-50%,-50%) scaleX(0)";
   strikeRight.style.transform = "translate(-50%,-50%) scaleX(0)";
 }
@@ -395,48 +351,37 @@ function animateSplitStrike(line){
     const first = cellEls[line[0]].getBoundingClientRect();
     const last = cellEls[line[2]].getBoundingClientRect();
     const parent = boardEl.getBoundingClientRect();
-
     const x1 = first.left + first.width/2 - parent.left;
     const y1 = first.top + first.height/2 - parent.top;
     const x2 = last.left + last.width/2 - parent.left;
     const y2 = last.top + last.height/2 - parent.top;
-
     const dx = x2-x1, dy=y2-y1;
     const len = Math.sqrt(dx*dx + dy*dy) + 14;
     const angle = Math.atan2(dy, dx) * 180/Math.PI;
-
-    const cx = (x1+x2)/2;
-    const cy = (y1+y2)/2;
-    const half = len/2;
+    const cx = (x1+x2)/2; const cy = (y1+y2)/2; const half = len/2;
 
     strikeLeft.classList.remove("hidden");
-    strikeLeft.style.width = half+"px";
-    strikeLeft.style.left = (cx-half/2)+"px";
-    strikeLeft.style.top = cy+"px";
-    strikeLeft.style.transformOrigin = "right center";
+    strikeLeft.style.width = half+"px"; strikeLeft.style.left = (cx-half/2)+"px";
+    strikeLeft.style.top = cy+"px"; strikeLeft.style.transformOrigin = "right center";
     strikeLeft.style.transition = "transform .36s";
     strikeLeft.style.transform = `translate(-50%,-50%) rotate(${angle}deg) scaleX(0)`;
 
     strikeRight.classList.remove("hidden");
-    strikeRight.style.width = half+"px";
-    strikeRight.style.left = (cx+half/2)+"px";
-    strikeRight.style.top = cy+"px";
-    strikeRight.style.transformOrigin = "left center";
+    strikeRight.style.width = half+"px"; strikeRight.style.left = (cx+half/2)+"px";
+    strikeRight.style.top = cy+"px"; strikeRight.style.transformOrigin = "left center";
     strikeRight.style.transition = "transform .36s";
     strikeRight.style.transform = `translate(-50%,-50%) rotate(${angle}deg) scaleX(0)`;
 
     void strikeLeft.offsetWidth;
-
     requestAnimationFrame(()=>{
       strikeLeft.style.transform = `translate(-50%,-50%) rotate(${angle}deg) scaleX(1)`;
       strikeRight.style.transform = `translate(-50%,-50%) rotate(${angle}deg) scaleX(1)`;
     });
-
     strikeLeft.addEventListener("transitionend", ()=> resolve(), {once:true});
   });
 }
 
-/* ---------- CPU (Minimax) ---------- */
+/* ---------- AI Logic ---------- */
 function computeBestMove(bd, player){
   if(bd.every(v=>v===null)) return 4;
   const best = minimax(bd, player);
@@ -445,15 +390,11 @@ function computeBestMove(bd, player){
 
 function minimax(bd, player){
   const res = checkMin(bd);
-  if(res.win){
-    if(res.player==="O") return {score:10};
-    if(res.player==="X") return {score:-10};
-  }
+  if(res.win) return {score: res.player==="O" ? 10 : -10};
   if(res.tie) return {score:0};
 
   const avail = bd.map((v,i)=>v===null?i:null).filter(v=>v!==null);
   const moves = [];
-
   for(const idx of avail){
     const move = {index:idx};
     bd[idx] = player;
@@ -462,7 +403,6 @@ function minimax(bd, player){
     bd[idx] = null;
     moves.push(move);
   }
-
   let bestMove;
   if(player === "O"){
     let bestScore = -Infinity;
@@ -477,9 +417,7 @@ function minimax(bd, player){
 function checkMin(bd){
   for(const l of WIN_LINES){
     const [a,b,c] = l;
-    if(bd[a] && bd[a]===bd[b] && bd[b]===bd[c]){
-      return {win:true, player:bd[a]};
-    }
+    if(bd[a] && bd[a]===bd[b] && bd[b]===bd[c]) return {win:true, player:bd[a]};
   }
   if(bd.every(v=>v!==null)) return {tie:true};
   return {};
@@ -504,8 +442,7 @@ function startConfetti(){
     confettiPieces.push({
       x:Math.random()*confettiCanvas.width,
       y:Math.random()*-confettiCanvas.height,
-      w:6+Math.random()*10,
-      h:8+Math.random()*12,
+      w:6+Math.random()*10, h:8+Math.random()*12,
       s:1+Math.random()*4,
       c:["#2ec4b6","#ffca3a","#ffffff","#ff6b6b","#ffd166"][Math.floor(Math.random()*5)],
       r:Math.random()*360
@@ -514,18 +451,13 @@ function startConfetti(){
   function loop(){
     confettiCtx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
     for(const p of confettiPieces){
-      p.y += p.s;
-      p.x += Math.sin(p.y*0.01)*2;
-      p.r += 5;
+      p.y += p.s; p.x += Math.sin(p.y*0.01)*2; p.r += 5;
       confettiCtx.save();
-      confettiCtx.translate(p.x,p.y);
-      confettiCtx.rotate(p.r * Math.PI/180);
-      confettiCtx.fillStyle = p.c;
-      confettiCtx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      confettiCtx.translate(p.x,p.y); confettiCtx.rotate(p.r * Math.PI/180);
+      confettiCtx.fillStyle = p.c; confettiCtx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
       confettiCtx.restore();
       if(p.y > confettiCanvas.height + 20){
-        p.y = Math.random()*-confettiCanvas.height;
-        p.x = Math.random()*confettiCanvas.width;
+        p.y = Math.random()*-confettiCanvas.height; p.x = Math.random()*confettiCanvas.width;
       }
     }
     confettiAnim = requestAnimationFrame(loop);
