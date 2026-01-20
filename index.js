@@ -49,6 +49,7 @@ let confettiCtx = confettiCanvas.getContext('2d');
 let twoPlayer = false;
 let board = Array(9).fill(null);
 let current = 'X';
+let roundStarter = 'X'; // Tracks who starts the current round
 let gameOver = false;
 let scores = { X: 0, O: 0, T: 0 };
 let WIN_GOAL = parseInt(winSlider.value, 10) || 3;
@@ -187,6 +188,7 @@ startGameBtn.addEventListener("click", () => {
   refreshLabels();
   resetMatch();
   roundNumber = 1;
+  roundStarter = "X"; // First round always starts with X
 
   updateRoundInfo();
   buildBoard();
@@ -195,7 +197,7 @@ startGameBtn.addEventListener("click", () => {
 /* ---------- Build Board ---------- */
 function buildBoard(){
   board = Array(9).fill(null);
-  current = "X";
+  current = roundStarter; // Set to the player designated to start this round
   gameOver = false;
   hideStrike();
 
@@ -206,6 +208,13 @@ function buildBoard(){
   });
 
   updateTurn();
+
+  // If it's CPU's turn to start the round, trigger it
+  if(!twoPlayer && current === "O") {
+    setTimeout(() => {
+        cpuPlay();
+    }, 600);
+  }
 }
 
 /* ---------- Cell Click ---------- */
@@ -220,17 +229,20 @@ function onCellClick(i){
 
   if(!twoPlayer && !gameOver && current === "O"){
     setTimeout(()=>{
-      let mv = computeBestMove(board, "O");
-      if(mv === undefined || mv === null) mv = chooseRandomEmpty(board);
-      clickSound();
-      makeMove(mv, "O");
-    },260);
+      cpuPlay();
+    }, 400);
   }
 }
 
-/* ============================================================
-   MAIN GAME LOGIC — AUTO NEXT ROUND ADDED
-   ============================================================ */
+function cpuPlay() {
+  if (gameOver) return;
+  let mv = computeBestMove(board, "O");
+  if(mv === undefined || mv === null) mv = chooseRandomEmpty(board);
+  clickSound();
+  makeMove(mv, "O");
+}
+
+/* ---------- MAIN GAME LOGIC ---------- */
 function makeMove(i, player){
   if(board[i]) return;
 
@@ -258,11 +270,9 @@ function makeMove(i, player){
       setTimeout(()=> showMatchWinner(w), 520);
     } else {
       turnBox.textContent = res.player + " WINS";
-
-      /* ---------- AUTO NEXT ROUND AFTER WIN ---------- */
       setTimeout(()=>{
         startNextRound();
-      }, 900);
+      }, 1200);
     }
     return;
   }
@@ -273,12 +283,9 @@ function makeMove(i, player){
     scores.T++;
     updateScores();
     turnBox.textContent = "TIE";
-
-    /* ---------- AUTO NEXT ROUND AFTER TIE ---------- */
     setTimeout(()=>{
       startNextRound();
-    }, 900);
-
+    }, 1200);
     return;
   }
 
@@ -290,6 +297,8 @@ function makeMove(i, player){
 /* ---------- Auto Next Round Function ---------- */
 function startNextRound(){
   roundNumber++;
+  // Toggle the starter for the next round
+  roundStarter = (roundStarter === "X") ? "O" : "X";
   updateRoundInfo();
   buildBoard();
 }
@@ -304,11 +313,12 @@ function updateTurn(){
 resetBtn.addEventListener("click", () => {
   showConfirm("Restart this round?", ok=>{
     if(!ok) return;
-
-    if(gameOver) roundNumber++;
-
-    buildBoard();
-    updateRoundInfo();
+    // If the round was already over, increment round count and flip starter
+    if(gameOver) {
+        startNextRound();
+    } else {
+        buildBoard(); // Just restart the same round
+    }
   });
 });
 
@@ -332,11 +342,9 @@ exitBtn.addEventListener("click", () =>{
 /* ---------- Match Winner Overlay ---------- */
 function showMatchWinner(player){
   winnerOverlay.style.display = "flex";
-
   const label = (player === "X") ? xLabel.textContent : oLabel.textContent;
   winnerTitle.textContent = "CONGRATULATIONS!";
   winnerText.textContent = `${label} reached ${WIN_GOAL} first — Match Won!`;
-
   matchWinSound();
   startConfetti();
 }
@@ -346,6 +354,7 @@ playAgain.addEventListener("click", ()=>{
   winnerOverlay.style.display = "none";
   resetMatch();
   roundNumber = 1;
+  roundStarter = "X"; 
   updateRoundInfo();
   buildBoard();
 });
@@ -361,6 +370,7 @@ backMenu.addEventListener("click", ()=>{
 /* ---------- Reset Match ---------- */
 function resetMatch(){
   scores = {X:0,O:0,T:0};
+  roundStarter = "X";
   updateScores();
 }
 
@@ -376,7 +386,7 @@ function checkBoard(bd){
   return {win:false};
 }
 
-/* ---------- Strike Animation (Split Line) ---------- */
+/* ---------- Strike Animation ---------- */
 function hideStrike(){
   strikeLeft.classList.add("hidden");
   strikeRight.classList.add("hidden");
@@ -403,7 +413,6 @@ function animateSplitStrike(line){
     const cy = (y1+y2)/2;
     const half = len/2;
 
-    /* Left */
     strikeLeft.classList.remove("hidden");
     strikeLeft.style.width = half+"px";
     strikeLeft.style.left = (cx-half/2)+"px";
@@ -412,7 +421,6 @@ function animateSplitStrike(line){
     strikeLeft.style.transition = "transform .36s";
     strikeLeft.style.transform = `translate(-50%,-50%) rotate(${angle}deg) scaleX(0)`;
 
-    /* Right */
     strikeRight.classList.remove("hidden");
     strikeRight.style.width = half+"px";
     strikeRight.style.left = (cx+half/2)+"px";
@@ -435,14 +443,12 @@ function animateSplitStrike(line){
 /* ---------- CPU (Minimax) ---------- */
 function computeBestMove(bd, player){
   if(bd.every(v=>v===null)) return 4;
-
   const best = minimax(bd, player);
   return best.index;
 }
 
 function minimax(bd, player){
   const res = checkMin(bd);
-
   if(res.win){
     if(res.player==="O") return {score:10};
     if(res.player==="X") return {score:-10};
@@ -462,7 +468,6 @@ function minimax(bd, player){
   }
 
   let bestMove;
-
   if(player === "O"){
     let bestScore = -Infinity;
     for(const m of moves) if(m.score > bestScore){ bestScore = m.score; bestMove = m; }
@@ -470,7 +475,6 @@ function minimax(bd, player){
     let bestScore = Infinity;
     for(const m of moves) if(m.score < bestScore){ bestScore = m.score; bestMove = m; }
   }
-
   return bestMove;
 }
 
@@ -499,7 +503,6 @@ function startConfetti(){
   confettiCanvas.width = window.innerWidth;
   confettiCanvas.height = window.innerHeight;
   confettiCtx = confettiCanvas.getContext("2d");
-
   confettiPieces=[];
   for(let i=0;i<140;i++){
     confettiPieces.push({
@@ -512,31 +515,25 @@ function startConfetti(){
       r:Math.random()*360
     });
   }
-
   function loop(){
     confettiCtx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
-
     for(const p of confettiPieces){
       p.y += p.s;
       p.x += Math.sin(p.y*0.01)*2;
       p.r += 5;
-
       confettiCtx.save();
       confettiCtx.translate(p.x,p.y);
       confettiCtx.rotate(p.r * Math.PI/180);
       confettiCtx.fillStyle = p.c;
       confettiCtx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
       confettiCtx.restore();
-
       if(p.y > confettiCanvas.height + 20){
         p.y = Math.random()*-confettiCanvas.height;
         p.x = Math.random()*confettiCanvas.width;
       }
     }
-
     confettiAnim = requestAnimationFrame(loop);
   }
-
   loop();
 }
 
