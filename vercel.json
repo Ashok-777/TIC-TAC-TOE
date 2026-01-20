@@ -1,11 +1,10 @@
 {
-  "_comment": "© Ashok-777 | GitHub: https://github.com/Ashok-777"
-}
-{
+  "version": 2,
+  "cleanUrls": true,
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
-}
-{
-  "_comment": "© Ashok-777 | GitHub: https://github.com/Ashok-777"
 }
