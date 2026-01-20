@@ -1,3 +1,4 @@
+// your code goes here
 /* © Ashok-777 */
 /* GitHub: https://github.com/Ashok-777 */
 /* ---------- DOM ---------- */
@@ -49,7 +50,7 @@ let confettiCtx = confettiCanvas.getContext('2d');
 let twoPlayer = false;
 let board = Array(9).fill(null);
 let current = 'X';
-let roundStarter = 'X'; // Tracks who starts the current round
+let roundStarter = 'X'; // Tracks who is supposed to start the current round
 let gameOver = false;
 let scores = { X: 0, O: 0, T: 0 };
 let WIN_GOAL = parseInt(winSlider.value, 10) || 3;
@@ -188,7 +189,7 @@ startGameBtn.addEventListener("click", () => {
   refreshLabels();
   resetMatch();
   roundNumber = 1;
-  roundStarter = "X"; // First round always starts with X
+  roundStarter = "X"; // Ensure Match always starts with X
 
   updateRoundInfo();
   buildBoard();
@@ -197,7 +198,7 @@ startGameBtn.addEventListener("click", () => {
 /* ---------- Build Board ---------- */
 function buildBoard(){
   board = Array(9).fill(null);
-  current = roundStarter; // Set to the player designated to start this round
+  current = roundStarter; // Apply the alternating starter logic
   gameOver = false;
   hideStrike();
 
@@ -209,33 +210,33 @@ function buildBoard(){
 
   updateTurn();
 
-  // If it's CPU's turn to start the round, trigger it
+  // If Round Starter is O and playing against CPU, trigger move
   if(!twoPlayer && current === "O") {
     setTimeout(() => {
-        cpuPlay();
+        if(!gameOver) cpuPlay();
     }, 600);
   }
 }
 
 /* ---------- Cell Click ---------- */
 function onCellClick(i){
-  if(gameOver) return;
-  if(board[i]) return;
+  if(gameOver || board[i]) return;
 
+  // In CPU mode, don't allow clicking during CPU turn
   if(!twoPlayer && current !== "X") return;
 
   clickSound();
   makeMove(i, current);
 
+  // Trigger CPU if applicable
   if(!twoPlayer && !gameOver && current === "O"){
     setTimeout(()=>{
-      cpuPlay();
+      if(!gameOver) cpuPlay();
     }, 400);
   }
 }
 
 function cpuPlay() {
-  if (gameOver) return;
   let mv = computeBestMove(board, "O");
   if(mv === undefined || mv === null) mv = chooseRandomEmpty(board);
   clickSound();
@@ -270,9 +271,7 @@ function makeMove(i, player){
       setTimeout(()=> showMatchWinner(w), 520);
     } else {
       turnBox.textContent = res.player + " WINS";
-      setTimeout(()=>{
-        startNextRound();
-      }, 1200);
+      setTimeout(()=> startNextRound(), 1200);
     }
     return;
   }
@@ -283,9 +282,7 @@ function makeMove(i, player){
     scores.T++;
     updateScores();
     turnBox.textContent = "TIE";
-    setTimeout(()=>{
-      startNextRound();
-    }, 1200);
+    setTimeout(()=> startNextRound(), 1200);
     return;
   }
 
@@ -297,7 +294,7 @@ function makeMove(i, player){
 /* ---------- Auto Next Round Function ---------- */
 function startNextRound(){
   roundNumber++;
-  // Toggle the starter for the next round
+  // Toggle the starter for the next round: X -> O or O -> X
   roundStarter = (roundStarter === "X") ? "O" : "X";
   updateRoundInfo();
   buildBoard();
@@ -313,11 +310,10 @@ function updateTurn(){
 resetBtn.addEventListener("click", () => {
   showConfirm("Restart this round?", ok=>{
     if(!ok) return;
-    // If the round was already over, increment round count and flip starter
     if(gameOver) {
         startNextRound();
     } else {
-        buildBoard(); // Just restart the same round
+        buildBoard(); // Restart round with same starter
     }
   });
 });
@@ -370,7 +366,7 @@ backMenu.addEventListener("click", ()=>{
 /* ---------- Reset Match ---------- */
 function resetMatch(){
   scores = {X:0,O:0,T:0};
-  roundStarter = "X";
+  roundStarter = "X"; // Match reset starts back at X
   updateScores();
 }
 
