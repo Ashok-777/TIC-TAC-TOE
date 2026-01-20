@@ -559,5 +559,3 @@ document.addEventListener("keydown", e=>{
   updateRoundInfo();
   updateScores();
 })();
-/* © Ashok-777 */
-/* GitHub: https://github.com/Ashok-777 */
